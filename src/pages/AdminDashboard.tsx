@@ -3,17 +3,19 @@ import { useAuth } from "@/hooks/useAuth";
 import { Navigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
-  LayoutDashboard, Users, FolderKanban, Inbox, Star, LogOut, Menu, X
+  LayoutDashboard, Users, FolderKanban, Inbox, Star, LogOut, Menu, X, UserPlus
 } from "lucide-react";
 import DashboardOverview from "@/components/admin/DashboardOverview";
 import ClientRequests from "@/components/admin/ClientRequests";
 import TeamManagement from "@/components/admin/TeamManagement";
 import ProjectWorkflow from "@/components/admin/ProjectWorkflow";
 import PerformanceRatings from "@/components/admin/PerformanceRatings";
+import TeamApplications from "@/components/admin/TeamApplications";
 
 const tabs = [
   { id: "overview", label: "Overview", icon: LayoutDashboard },
   { id: "requests", label: "Client Requests", icon: Inbox },
+  { id: "applications", label: "Team Applications", icon: UserPlus },
   { id: "team", label: "Team", icon: Users },
   { id: "projects", label: "Projects", icon: FolderKanban },
   { id: "ratings", label: "Ratings", icon: Star },
@@ -40,6 +42,7 @@ const AdminDashboard = () => {
     switch (activeTab) {
       case "overview": return <DashboardOverview />;
       case "requests": return <ClientRequests />;
+      case "applications": return <TeamApplications />;
       case "team": return <TeamManagement />;
       case "projects": return <ProjectWorkflow />;
       case "ratings": return <PerformanceRatings />;

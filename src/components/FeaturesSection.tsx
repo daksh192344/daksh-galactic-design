@@ -3,9 +3,9 @@ import { motion } from "framer-motion";
 
 const faces = [
   { label: "3D Website Design", desc: "Stunning 3D visuals that make your website stand out from competitors." },
-  { label: "AI-Powered Builder", desc: "Leverage AI to build smarter, faster, and more personalized websites." },
   { label: "48-Hour Delivery", desc: "Get your complete website delivered in just 48 hours, guaranteed." },
   { label: "Conversion-Optimized", desc: "UI designed to maximize leads, sales, and user engagement." },
+  { label: "Premium Quality", desc: "Every pixel crafted with care for a professional, polished result." },
 ];
 
 const FeaturesSection = () => {
@@ -29,13 +29,12 @@ const FeaturesSection = () => {
     setRotation((prev) => {
       const newY = prev.y + dx * 0.5;
       const newX = prev.x - dy * 0.5;
-      // Determine active face based on Y rotation
       const normalizedY = ((newY % 360) + 360) % 360;
       let idx = 0;
       if (normalizedY >= 315 || normalizedY < 45) idx = 0;
-      else if (normalizedY >= 45 && normalizedY < 135) idx = 2;
-      else if (normalizedY >= 135 && normalizedY < 225) idx = 3;
-      else idx = 1;
+      else if (normalizedY >= 45 && normalizedY < 135) idx = 1;
+      else if (normalizedY >= 135 && normalizedY < 225) idx = 2;
+      else idx = 3;
       setActiveIndex(idx);
       return { x: newX, y: newY };
     });
@@ -46,13 +45,13 @@ const FeaturesSection = () => {
   };
 
   return (
-    <section id="features" className="py-20 px-6">
+    <section id="features" className="py-16 sm:py-20 px-4 sm:px-6">
       <div className="container text-center">
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-2xl sm:text-4xl font-display font-bold mb-3"
+          className="text-xl sm:text-2xl md:text-4xl font-display font-bold mb-3"
         >
           Explore Our <span className="gradient-text">Features</span>
         </motion.h2>
@@ -60,7 +59,7 @@ const FeaturesSection = () => {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          className="text-muted-foreground mb-12 font-body"
+          className="text-muted-foreground mb-8 sm:mb-12 font-body text-sm sm:text-base"
         >
           Drag to rotate the cube and explore our features
         </motion.p>
@@ -78,8 +77,8 @@ const FeaturesSection = () => {
             >
               <div className="cube-face front">{faces[0].label}</div>
               <div className="cube-face right">{faces[1].label}</div>
-              <div className="cube-face left">{faces[2].label}</div>
-              <div className="cube-face back">{faces[3].label}</div>
+              <div className="cube-face back">{faces[2].label}</div>
+              <div className="cube-face left">{faces[3].label}</div>
               <div className="cube-face top">Daksh.dev</div>
               <div className="cube-face bottom">Premium</div>
             </div>
@@ -89,10 +88,10 @@ const FeaturesSection = () => {
             key={activeIndex}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mt-10 max-w-md"
+            className="mt-8 sm:mt-10 max-w-md px-4"
           >
-            <h3 className="font-display text-lg text-primary mb-2">{faces[activeIndex].label}</h3>
-            <p className="text-muted-foreground font-body text-sm">{faces[activeIndex].desc}</p>
+            <h3 className="font-display text-base sm:text-lg text-primary mb-2">{faces[activeIndex].label}</h3>
+            <p className="text-muted-foreground font-body text-xs sm:text-sm">{faces[activeIndex].desc}</p>
           </motion.div>
         </div>
       </div>

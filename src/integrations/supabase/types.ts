@@ -167,6 +167,48 @@ export type Database = {
           },
         ]
       }
+      team_applications: {
+        Row: {
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          location: string
+          phone: string
+          portfolio_links: Json | null
+          role: Database["public"]["Enums"]["application_role"]
+          role_specific_answers: Json | null
+          status: Database["public"]["Enums"]["application_status"] | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          full_name: string
+          id?: string
+          location: string
+          phone: string
+          portfolio_links?: Json | null
+          role: Database["public"]["Enums"]["application_role"]
+          role_specific_answers?: Json | null
+          status?: Database["public"]["Enums"]["application_status"] | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          full_name?: string
+          id?: string
+          location?: string
+          phone?: string
+          portfolio_links?: Json | null
+          role?: Database["public"]["Enums"]["application_role"]
+          role_specific_answers?: Json | null
+          status?: Database["public"]["Enums"]["application_status"] | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       team_members: {
         Row: {
           created_at: string
@@ -239,6 +281,14 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "user"
+      application_role:
+        | "cold_caller"
+        | "social_media_marketer"
+        | "nocode_builder"
+        | "web_developer"
+        | "designer"
+        | "digital_marketer"
+      application_status: "pending" | "approved" | "rejected"
       project_status:
         | "pending"
         | "in_progress"
@@ -374,6 +424,15 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "user"],
+      application_role: [
+        "cold_caller",
+        "social_media_marketer",
+        "nocode_builder",
+        "web_developer",
+        "designer",
+        "digital_marketer",
+      ],
+      application_status: ["pending", "approved", "rejected"],
       project_status: [
         "pending",
         "in_progress",
