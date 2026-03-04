@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { Briefcase, MessageCircle, ChevronDown } from "lucide-react";
 import heroBg from "@/assets/hero-bg.jpg";
 
-const HeroSection = () => {
+const HeroSection = ({ onStartProject }: { onStartProject?: () => void }) => {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
       {/* Background */}
@@ -64,9 +64,9 @@ const HeroSection = () => {
           transition={{ duration: 0.6, delay: 0.45 }}
           className="flex flex-col sm:flex-row gap-4 justify-center mb-8"
         >
-          <a href="#cta" className="neon-button px-8 py-3.5 rounded-xl text-sm flex items-center justify-center gap-2">
+          <button onClick={onStartProject} className="neon-button px-8 py-3.5 rounded-xl text-sm flex items-center justify-center gap-2">
             <MessageCircle size={18} /> Get My Website
-          </a>
+          </button>
           <a href="#portfolio" className="neon-button-outline px-8 py-3.5 rounded-xl text-sm flex items-center justify-center gap-2">
             <Briefcase size={18} /> View Portfolio
           </a>
