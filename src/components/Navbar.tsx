@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 
-const Navbar = () => {
+const Navbar = ({ onStartProject }: { onStartProject?: () => void }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const links = ["Features", "Portfolio", "Pricing", "Reviews"];
@@ -26,9 +26,9 @@ const Navbar = () => {
               {link}
             </a>
           ))}
-          <a href="#cta" className="neon-button px-5 py-2 rounded-lg text-sm">
+          <button onClick={onStartProject} className="neon-button px-5 py-2 rounded-lg text-sm">
             Get Started
-          </a>
+          </button>
         </div>
 
         {/* Mobile toggle */}
@@ -60,9 +60,9 @@ const Navbar = () => {
                   {link}
                 </a>
               ))}
-              <a href="#cta" className="neon-button px-5 py-2.5 rounded-lg text-sm text-center">
+              <button onClick={() => { setIsOpen(false); onStartProject?.(); }} className="neon-button px-5 py-2.5 rounded-lg text-sm text-center">
                 Get Started
-              </a>
+              </button>
             </div>
           </motion.div>
         )}
