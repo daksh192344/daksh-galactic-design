@@ -17,8 +17,8 @@ const HeroSection = ({ onStartProject }: { onStartProject?: () => void }) => {
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute inset-0" style={{
           backgroundImage: `
-            linear-gradient(hsl(180 100% 50% / 0.15) 1px, transparent 1px),
-            linear-gradient(90deg, hsl(180 100% 50% / 0.15) 1px, transparent 1px)
+            linear-gradient(hsl(0 0% 100% / 0.12) 1px, transparent 1px),
+            linear-gradient(90deg, hsl(0 0% 100% / 0.12) 1px, transparent 1px)
           `,
           backgroundSize: '60px 60px',
           transform: 'perspective(500px) rotateX(60deg)',
@@ -31,7 +31,7 @@ const HeroSection = ({ onStartProject }: { onStartProject?: () => void }) => {
       <motion.div
         className="absolute w-48 h-48 sm:w-72 sm:h-72 rounded-full left-[10%] top-[20%]"
         style={{
-          background: 'radial-gradient(circle, hsl(180 100% 50% / 0.4), transparent 70%)',
+          background: 'radial-gradient(circle, hsl(0 0% 100% / 0.35), transparent 70%)',
           filter: 'blur(30px)',
         }}
         animate={{
@@ -44,7 +44,7 @@ const HeroSection = ({ onStartProject }: { onStartProject?: () => void }) => {
       <motion.div
         className="absolute w-32 h-32 sm:w-56 sm:h-56 rounded-full right-[10%] top-[15%]"
         style={{
-          background: 'radial-gradient(circle, hsl(160 100% 50% / 0.3), transparent 70%)',
+          background: 'radial-gradient(circle, hsl(0 0% 100% / 0.25), transparent 70%)',
           filter: 'blur(25px)',
         }}
         animate={{
@@ -57,7 +57,7 @@ const HeroSection = ({ onStartProject }: { onStartProject?: () => void }) => {
       <motion.div
         className="absolute w-40 h-40 sm:w-64 sm:h-64 rounded-full left-[40%] bottom-[20%]"
         style={{
-          background: 'radial-gradient(circle, hsl(200 100% 50% / 0.25), transparent 70%)',
+          background: 'radial-gradient(circle, hsl(0 0% 100% / 0.2), transparent 70%)',
           filter: 'blur(30px)',
         }}
         animate={{
@@ -71,19 +71,19 @@ const HeroSection = ({ onStartProject }: { onStartProject?: () => void }) => {
       {/* 3D Rotating rings */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <motion.div
-          className="absolute w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] rounded-full border-2 border-primary/30"
+          className="absolute w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] rounded-full border-2 border-white/25"
           animate={{ rotateZ: 360 }}
           transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
           style={{ transformStyle: 'preserve-3d', transform: 'rotateX(70deg)' }}
         />
         <motion.div
-          className="absolute w-[350px] h-[350px] sm:w-[600px] sm:h-[600px] rounded-full border border-primary/20"
+          className="absolute w-[350px] h-[350px] sm:w-[600px] sm:h-[600px] rounded-full border border-white/15"
           animate={{ rotateZ: -360 }}
           transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
           style={{ transformStyle: 'preserve-3d', transform: 'rotateX(70deg) rotateY(20deg)' }}
         />
         <motion.div
-          className="absolute w-[250px] h-[250px] sm:w-[400px] sm:h-[400px] rounded-full border border-primary/15"
+          className="absolute w-[250px] h-[250px] sm:w-[400px] sm:h-[400px] rounded-full border border-white/10"
           animate={{ rotateZ: 360 }}
           transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
           style={{ transformStyle: 'preserve-3d', transform: 'rotateX(60deg) rotateY(-10deg)' }}
@@ -94,7 +94,7 @@ const HeroSection = ({ onStartProject }: { onStartProject?: () => void }) => {
       {Array.from({ length: 15 }).map((_, i) => (
         <motion.div
           key={i}
-          className="absolute w-1.5 h-1.5 rounded-full bg-primary/80"
+          className="absolute w-1.5 h-1.5 rounded-full bg-white/70"
           style={{
             left: `${Math.random() * 100}%`,
             top: `${Math.random() * 100}%`,
