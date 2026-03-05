@@ -1,8 +1,10 @@
 import { motion } from "framer-motion";
-import { Briefcase, MessageCircle, ChevronDown } from "lucide-react";
+import { Briefcase, MessageCircle, ChevronDown, Users } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import heroBg from "@/assets/hero-bg.jpg";
 
 const HeroSection = ({ onStartProject }: { onStartProject?: () => void }) => {
+  const navigate = useNavigate();
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
       {/* Background */}
@@ -137,6 +139,9 @@ const HeroSection = ({ onStartProject }: { onStartProject?: () => void }) => {
           <a href="#portfolio" className="neon-button-outline px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl text-xs sm:text-sm flex items-center justify-center gap-2">
             <Briefcase size={16} /> View Portfolio
           </a>
+          <button onClick={() => navigate('/join')} className="neon-button-outline px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl text-xs sm:text-sm flex items-center justify-center gap-2">
+            <Users size={16} /> Join Our Team
+          </button>
         </motion.div>
 
         <motion.p
