@@ -4,7 +4,7 @@ const Footer = () => (
   <footer className="py-8 border-t border-border/30">
     <div className="container px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
       <p className="text-sm text-muted-foreground font-body">
-        © 2026 <span className="neon-text font-display">Daksh.dev</span> — All rights reserved.
+        © 2026 <span className="neon-text font-display">Great Coders</span> — All rights reserved.
       </p>
       <Link
         to="/join"
