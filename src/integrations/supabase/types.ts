@@ -221,6 +221,7 @@ export type Database = {
           role: Database["public"]["Enums"]["team_role"]
           total_ratings: number | null
           updated_at: string
+          user_id: string | null
         }
         Insert: {
           created_at?: string
@@ -233,6 +234,7 @@ export type Database = {
           role: Database["public"]["Enums"]["team_role"]
           total_ratings?: number | null
           updated_at?: string
+          user_id?: string | null
         }
         Update: {
           created_at?: string
@@ -245,6 +247,7 @@ export type Database = {
           role?: Database["public"]["Enums"]["team_role"]
           total_ratings?: number | null
           updated_at?: string
+          user_id?: string | null
         }
         Relationships: []
       }
