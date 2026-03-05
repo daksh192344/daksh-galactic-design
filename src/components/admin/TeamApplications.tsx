@@ -54,41 +54,51 @@ const TeamApplications = () => {
     const app = applications.find((a) => a.id === id);
     if (!app) return;
 
-    const { error } = await supabase
-      .from("team_applications")
-      .update({ status })
-      .eq("id", id);
+    try {
+      const { error } = await supabase
+        .from("team_applications")
+        .update({ status })
+        .eq("id", id);
 
-    if (error) {
-      toast.error("Failed to update status");
-      return;
+      if (error) {
+        console.error("Update status error:", error);
+        toast.error("Failed to update status: " + error.message);
+        return;
+      }
+
+      if (status === "approved") {
+        const roleMap: Record<string, "cold_caller" | "developer" | "designer" | "manager"> = {
+          cold_caller: "cold_caller",
+          web_developer: "developer",
+          designer: "designer",
+          nocode_builder: "developer",
+          social_media_marketer: "manager",
+          digital_marketer: "manager",
+        };
+
+        const teamRole = roleMap[app.role] || "developer";
+        const { error: insertError } = await supabase.from("team_members").insert([{
+          name: app.full_name,
+          email: app.email,
+          role: teamRole,
+        }]);
+
+        if (insertError) {
+          console.error("Insert team member error:", insertError);
+          toast.error("Status updated but failed to add team member: " + insertError.message);
+        } else {
+          toast.success(`${app.full_name} has been added to the team!`);
+        }
+      } else {
+        toast.success("Application rejected");
+      }
+
+      await fetchApplications();
+      setSelectedApp(null);
+    } catch (err) {
+      console.error("Unexpected error:", err);
+      toast.error("An unexpected error occurred");
     }
-
-    // If approved, also add as team member
-    if (status === "approved") {
-      const roleMap: Record<string, "cold_caller" | "developer" | "designer" | "manager"> = {
-        cold_caller: "cold_caller",
-        web_developer: "developer",
-        designer: "designer",
-        nocode_builder: "developer",
-        social_media_marketer: "manager",
-        digital_marketer: "manager",
-      };
-
-      const teamRole = roleMap[app.role] || "developer";
-      await supabase.from("team_members").insert([{
-        name: app.full_name,
-        email: app.email,
-        role: teamRole,
-      }]);
-
-      toast.success(`${app.full_name} has been added to the team!`);
-    } else {
-      toast.success("Application rejected");
-    }
-
-    fetchApplications();
-    setSelectedApp(null);
   };
 
   const statusColor = (status: string) => {
