@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -9,38 +9,78 @@ const TeamLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [checking, setChecking] = useState(true);
   const navigate = useNavigate();
+
+  // Check if already logged in as a team member
+  useEffect(() => {
+    const checkExisting = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        const { data: member } = await supabase
+          .from("team_members")
+          .select("id")
+          .eq("user_id", session.user.id)
+          .maybeSingle();
+        if (member) {
+          navigate("/team/dashboard", { replace: true });
+          return;
+        }
+      }
+      setChecking(false);
+    };
+    checkExisting();
+  }, [navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    try {
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
 
-    if (error) {
-      toast.error(error.message);
+      if (error) {
+        toast.error(error.message);
+        setLoading(false);
+        return;
+      }
+
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        toast.error("Login failed. Please try again.");
+        setLoading(false);
+        return;
+      }
+
+      const { data: member } = await supabase
+        .from("team_members")
+        .select("id")
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+      if (!member) {
+        await supabase.auth.signOut();
+        toast.error("No team member account found for this login.");
+        setLoading(false);
+        return;
+      }
+
+      toast.success("Welcome back!");
+      navigate("/team/dashboard");
+    } catch (err) {
+      toast.error("Something went wrong. Please try again.");
+    } finally {
       setLoading(false);
-      return;
     }
-
-    // Check if this user is linked to a team member
-    const { data: member } = await supabase
-      .from("team_members")
-      .select("id")
-      .eq("user_id", (await supabase.auth.getUser()).data.user?.id)
-      .maybeSingle();
-
-    if (!member) {
-      await supabase.auth.signOut();
-      toast.error("No team member account found for this login.");
-      setLoading(false);
-      return;
-    }
-
-    toast.success("Welcome back!");
-    navigate("/team/dashboard");
-    setLoading(false);
   };
+
+  if (checking) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
@@ -88,6 +128,10 @@ const TeamLogin = () => {
             {loading ? "Signing in..." : "Sign In"}
           </button>
         </form>
+
+        <p className="text-center text-xs text-muted-foreground mt-6 font-body">
+          <a href="/" className="text-primary hover:underline">← Back to website</a>
+        </p>
       </motion.div>
     </div>
   );

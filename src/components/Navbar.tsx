@@ -5,7 +5,7 @@ import { Menu, X } from "lucide-react";
 const Navbar = ({ onStartProject }: { onStartProject?: () => void }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const links = ["Features", "Portfolio", "Pricing", "Reviews"];
+  const hashLinks = ["Features", "Pricing", "Reviews"];
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 glass-card border-b border-border/50">
@@ -16,7 +16,7 @@ const Navbar = ({ onStartProject }: { onStartProject?: () => void }) => {
 
         {/* Desktop */}
         <div className="hidden md:flex items-center gap-8">
-          {links.map((link) => (
+          {hashLinks.map((link) => (
             <a
               key={link}
               href={`#${link.toLowerCase()}`}
@@ -25,6 +25,9 @@ const Navbar = ({ onStartProject }: { onStartProject?: () => void }) => {
               {link}
             </a>
           ))}
+          <a href="/portfolio" className="text-sm text-muted-foreground hover:text-primary transition-colors font-body">
+            Portfolio
+          </a>
           <button onClick={onStartProject} className="neon-button px-5 py-2 rounded-lg text-sm">
             Get Started
           </button>
@@ -49,7 +52,7 @@ const Navbar = ({ onStartProject }: { onStartProject?: () => void }) => {
             className="md:hidden glass-card border-t border-border/50"
           >
             <div className="container py-4 flex flex-col gap-4">
-              {links.map((link) => (
+              {hashLinks.map((link) => (
                 <a
                   key={link}
                   href={`#${link.toLowerCase()}`}
@@ -59,6 +62,9 @@ const Navbar = ({ onStartProject }: { onStartProject?: () => void }) => {
                   {link}
                 </a>
               ))}
+              <a href="/portfolio" onClick={() => setIsOpen(false)} className="text-muted-foreground hover:text-primary transition-colors font-body">
+                Portfolio
+              </a>
               <button onClick={() => { setIsOpen(false); onStartProject?.(); }} className="neon-button px-5 py-2.5 rounded-lg text-sm text-center">
                 Get Started
               </button>
