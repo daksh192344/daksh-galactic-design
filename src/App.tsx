@@ -10,6 +10,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import JoinTeam from "./pages/JoinTeam";
 import TeamLogin from "./pages/TeamLogin";
 import TeamDashboard from "./pages/TeamDashboard";
+import Portfolio from "./pages/Portfolio";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -24,6 +25,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/join" element={<JoinTeam />} />
+            <Route path="/portfolio" element={<Portfolio />} />
             <Route path="/admin" element={<AdminLogin />} />
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
             <Route path="/team/login" element={<TeamLogin />} />

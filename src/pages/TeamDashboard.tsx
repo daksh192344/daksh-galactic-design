@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
-import { LogOut, FolderKanban, CheckCircle, Clock, AlertCircle } from "lucide-react";
+import { LogOut, FolderKanban, CheckCircle, Clock, AlertCircle, Star } from "lucide-react";
 import { toast } from "sonner";
 
 interface TeamMember {
@@ -41,21 +41,21 @@ const TeamDashboard = () => {
 
   useEffect(() => {
     const load = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        navigate("/team/login");
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.user) {
+        navigate("/team/login", { replace: true });
         return;
       }
 
       const { data: memberData } = await supabase
         .from("team_members")
         .select("id, name, role, rating, projects_completed")
-        .eq("user_id", user.id)
+        .eq("user_id", session.user.id)
         .maybeSingle();
 
       if (!memberData) {
         await supabase.auth.signOut();
-        navigate("/team/login");
+        navigate("/team/login", { replace: true });
         return;
       }
 
@@ -109,7 +109,6 @@ const TeamDashboard = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
       <header className="glass-card border-b border-border/30 px-4 md:px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <a href="/" className="font-display text-lg font-bold">
@@ -122,22 +121,18 @@ const TeamDashboard = () => {
             <p className="font-display text-sm font-semibold">{member?.name}</p>
             <p className="text-xs text-muted-foreground font-body capitalize">{member?.role?.replace("_", " ")}</p>
           </div>
-          <button
-            onClick={handleSignOut}
-            className="text-muted-foreground hover:text-destructive transition-colors"
-          >
+          <button onClick={handleSignOut} className="text-muted-foreground hover:text-destructive transition-colors">
             <LogOut size={18} />
           </button>
         </div>
       </header>
 
       <main className="max-w-4xl mx-auto p-4 md:p-6 space-y-6">
-        {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {[
             { label: "Active Tasks", value: activeTasks.length, icon: FolderKanban },
             { label: "Completed", value: completedTasks.length, icon: CheckCircle },
-            { label: "Rating", value: Number(member?.rating ?? 5).toFixed(1), icon: AlertCircle },
+            { label: "Rating", value: Number(member?.rating ?? 5).toFixed(1), icon: Star },
             { label: "Projects Done", value: member?.projects_completed ?? 0, icon: Clock },
           ].map((stat, i) => (
             <motion.div
@@ -154,7 +149,6 @@ const TeamDashboard = () => {
           ))}
         </div>
 
-        {/* Active Tasks */}
         <div>
           <h2 className="font-display text-lg font-bold mb-3">Active Tasks</h2>
           {activeTasks.length === 0 ? (
@@ -168,12 +162,7 @@ const TeamDashboard = () => {
                 const config = statusConfig[task.status || "assigned"] || statusConfig.assigned;
                 const StatusIcon = config.icon;
                 return (
-                  <motion.div
-                    key={task.id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="glass-card neon-border rounded-xl p-4"
-                  >
+                  <motion.div key={task.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="glass-card neon-border rounded-xl p-4">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
@@ -188,27 +177,19 @@ const TeamDashboard = () => {
                         </p>
                         <div className="flex gap-3 mt-2 text-xs text-muted-foreground font-body">
                           <span>Client: {task.projects?.client_name}</span>
-                          <span className={`capitalize ${
-                            task.projects?.priority === "urgent" ? "text-red-400" : "text-muted-foreground"
-                          }`}>
+                          <span className={`capitalize ${task.projects?.priority === "urgent" ? "text-red-400" : "text-muted-foreground"}`}>
                             {task.projects?.priority}
                           </span>
                         </div>
                       </div>
                       <div className="flex gap-2 flex-shrink-0">
                         {task.status === "assigned" && (
-                          <button
-                            onClick={() => updateTaskStatus(task.id, "in_progress")}
-                            className="neon-button px-3 py-2 rounded-lg text-xs"
-                          >
+                          <button onClick={() => updateTaskStatus(task.id, "in_progress")} className="neon-button px-3 py-2 rounded-lg text-xs">
                             Start Working
                           </button>
                         )}
                         {task.status === "in_progress" && (
-                          <button
-                            onClick={() => updateTaskStatus(task.id, "completed")}
-                            className="neon-button px-3 py-2 rounded-lg text-xs"
-                          >
+                          <button onClick={() => updateTaskStatus(task.id, "completed")} className="neon-button px-3 py-2 rounded-lg text-xs">
                             Mark Complete
                           </button>
                         )}
@@ -221,7 +202,6 @@ const TeamDashboard = () => {
           )}
         </div>
 
-        {/* Completed Tasks */}
         {completedTasks.length > 0 && (
           <div>
             <h2 className="font-display text-lg font-bold mb-3 text-muted-foreground">Completed</h2>
