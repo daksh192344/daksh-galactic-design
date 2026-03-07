@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
-import { LogOut, FolderKanban, CheckCircle, Clock, AlertCircle, Star } from "lucide-react";
+import { LogOut, FolderKanban, CheckCircle, Clock, AlertCircle, Star, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
 
 interface TeamMember {
@@ -37,21 +37,26 @@ const TeamDashboard = () => {
   const [member, setMember] = useState<TeamMember | null>(null);
   const [tasks, setTasks] = useState<TaskAssignment[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const load = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.user) {
+  const load = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      if (sessionError || !session?.user) {
         navigate("/team/login", { replace: true });
         return;
       }
 
-      const { data: memberData } = await supabase
+      const { data: memberData, error: memberError } = await supabase
         .from("team_members")
         .select("id, name, role, rating, projects_completed")
         .eq("user_id", session.user.id)
         .maybeSingle();
+
+      if (memberError) throw memberError;
 
       if (!memberData) {
         await supabase.auth.signOut();
@@ -61,18 +66,23 @@ const TeamDashboard = () => {
 
       setMember(memberData);
 
-      const { data: taskData } = await supabase
+      const { data: taskData, error: taskError } = await supabase
         .from("task_assignments")
         .select("id, task_description, status, created_at, project_id, projects(business_name, client_name, priority, status)")
         .eq("team_member_id", memberData.id)
         .order("created_at", { ascending: false });
 
+      if (taskError) throw taskError;
       setTasks((taskData as TaskAssignment[]) || []);
+    } catch (err: any) {
+      console.error("Dashboard load error:", err);
+      setError("Failed to load dashboard data.");
+    } finally {
       setLoading(false);
-    };
+    }
+  };
 
-    load();
-  }, [navigate]);
+  useEffect(() => { load(); }, [navigate]);
 
   const updateTaskStatus = async (taskId: string, newStatus: string) => {
     const { error } = await supabase
@@ -100,6 +110,19 @@ const TeamDashboard = () => {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
+        <div className="glass-card neon-border rounded-2xl p-8 max-w-md text-center space-y-4">
+          <p className="text-sm text-destructive font-body">{error}</p>
+          <button onClick={load} className="neon-button px-6 py-3 rounded-xl text-sm flex items-center justify-center gap-2 mx-auto">
+            <RefreshCw size={16} /> Retry
+          </button>
+        </div>
       </div>
     );
   }

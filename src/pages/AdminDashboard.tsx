@@ -3,7 +3,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Navigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
-  LayoutDashboard, Users, FolderKanban, Inbox, Star, LogOut, Menu, X, UserPlus, Image
+  LayoutDashboard, Users, FolderKanban, Inbox, Star, LogOut, Menu, X, UserPlus, Image, RefreshCw
 } from "lucide-react";
 import DashboardOverview from "@/components/admin/DashboardOverview";
 import ClientRequests from "@/components/admin/ClientRequests";
@@ -24,7 +24,7 @@ const tabs = [
 ];
 
 const AdminDashboard = () => {
-  const { session, isAdmin, loading, signOut } = useAuth();
+  const { session, isAdmin, loading, error, retry, signOut } = useAuth();
   const [activeTab, setActiveTab] = useState("overview");
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -32,6 +32,19 @@ const AdminDashboard = () => {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
+        <div className="glass-card neon-border rounded-2xl p-8 max-w-md text-center space-y-4">
+          <p className="text-sm text-destructive font-body">{error}</p>
+          <button onClick={retry} className="neon-button px-6 py-3 rounded-xl text-sm flex items-center justify-center gap-2 mx-auto">
+            <RefreshCw size={16} /> Retry
+          </button>
+        </div>
       </div>
     );
   }
