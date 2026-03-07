@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Helmet } from "react-helmet-async";
+
 
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
@@ -18,13 +18,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
 
-      <Helmet>
-        <title>Affordable Website Development for Small Businesses | Great Coders</title>
-        <meta
-          name="description"
-          content="Modern websites with high performance and beautiful design. Launch your business website starting at ₹2000."
-        />
-      </Helmet>
+      
 
       <Navbar onStartProject={() => setIsCollectorOpen(true)} />
 
