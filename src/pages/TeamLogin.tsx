@@ -12,20 +12,23 @@ const TeamLogin = () => {
   const [checking, setChecking] = useState(true);
   const navigate = useNavigate();
 
-  // Check if already logged in as a team member
   useEffect(() => {
     const checkExisting = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session?.user) {
-        const { data: member } = await supabase
-          .from("team_members")
-          .select("id")
-          .eq("user_id", session.user.id)
-          .maybeSingle();
-        if (member) {
-          navigate("/team/dashboard", { replace: true });
-          return;
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user) {
+          const { data: member } = await supabase
+            .from("team_members")
+            .select("id")
+            .eq("user_id", session.user.id)
+            .maybeSingle();
+          if (member) {
+            navigate("/team/dashboard", { replace: true });
+            return;
+          }
         }
+      } catch (err) {
+        console.error("Session check failed:", err);
       }
       setChecking(false);
     };
