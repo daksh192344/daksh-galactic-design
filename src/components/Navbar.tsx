@@ -1,115 +1,85 @@
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 
-const Navbar = ({ onStartProject }: { onStartProject?: () => void }) => {
-  const [isOpen, setIsOpen] = useState(false);
+type Props = {
+onStartProject?: () => void;
+};
 
-  const hashLinks = ["Features", "Pricing", "Reviews"];
+const Navbar = ({ onStartProject }: Props) => {
+const [isOpen, setIsOpen] = useState(false);
 
-  return (
-    <nav
-      className="fixed top-0 left-0 right-0 z-50 glass-card border-b border-border/50"
-      aria-label="Main Navigation"
-    >
-      <div className="container flex items-center justify-between h-16">
+const links = [
+{ name: "Features", href: "#features" },
+{ name: "Pricing", href: "#pricing" },
+{ name: "Reviews", href: "#reviews" },
+{ name: "Portfolio", href: "/portfolio" }
+];
 
-        {/* Logo */}
+return (
+<nav className="fixed top-0 left-0 right-0 z-50 bg-background border-b border-border">
+<div className="container mx-auto flex items-center justify-between h-16 px-4">
+
+    <a href="/" className="text-xl font-bold">
+      Great Coders
+    </a>
+
+    <div className="hidden md:flex items-center gap-6">
+      {links.map((link) => (
         <a
-          href="/"
-          className="font-display text-xl font-bold"
-          aria-label="Great Coders Homepage"
+          key={link.name}
+          href={link.href}
+          className="text-sm text-muted-foreground hover:text-primary"
         >
-          <span className="neon-text">Great Coders</span>
+          {link.name}
         </a>
+      ))}
 
-        {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center gap-8">
+      <button
+        onClick={onStartProject}
+        className="bg-primary text-white px-4 py-2 rounded-lg text-sm"
+      >
+        Get Started
+      </button>
+    </div>
 
-          {hashLinks.map((link) => (
-            <a
-              key={link}
-              href={`#${link.toLowerCase()}`}
-              className="text-sm text-muted-foreground hover:text-primary transition-colors font-body"
-            >
-              {link}
-            </a>
-          ))}
+    <button
+      className="md:hidden"
+      onClick={() => setIsOpen(!isOpen)}
+    >
+      {isOpen ? <X size={24}/> : <Menu size={24}/>}
+    </button>
 
-          <a
-            href="/portfolio"
-            className="text-sm text-muted-foreground hover:text-primary transition-colors font-body"
-          >
-            Portfolio
-          </a>
+  </div>
 
-          <button
-            onClick={onStartProject}
-            className="neon-button px-5 py-2 rounded-lg text-sm"
-          >
-            Get Started
-          </button>
+  {isOpen && (
+    <div className="md:hidden border-t border-border p-4 space-y-4">
 
-        </div>
-
-        {/* Mobile Menu Button */}
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="md:hidden text-foreground"
-          aria-label="Toggle Navigation Menu"
+      {links.map((link) => (
+        <a
+          key={link.name}
+          href={link.href}
+          className="block text-muted-foreground"
+          onClick={() => setIsOpen(false)}
         >
-          {isOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
+          {link.name}
+        </a>
+      ))}
 
-      </div>
+      <button
+        onClick={() => {
+          setIsOpen(false);
+          onStartProject?.();
+        }}
+        className="bg-primary text-white px-4 py-2 rounded-lg w-full"
+      >
+        Get Started
+      </button>
 
-      {/* Mobile Menu */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden glass-card border-t border-border/50"
-          >
-            <div className="container py-4 flex flex-col gap-4">
+    </div>
+  )}
+</nav>
 
-              {hashLinks.map((link) => (
-                <a
-                  key={link}
-                  href={`#${link.toLowerCase()}`}
-                  onClick={() => setIsOpen(false)}
-                  className="text-muted-foreground hover:text-primary transition-colors font-body"
-                >
-                  {link}
-                </a>
-              ))}
-
-              <a
-                href="/portfolio"
-                onClick={() => setIsOpen(false)}
-                className="text-muted-foreground hover:text-primary transition-colors font-body"
-              >
-                Portfolio
-              </a>
-
-              <button
-                onClick={() => {
-                  setIsOpen(false);
-                  onStartProject?.();
-                }}
-                className="neon-button px-5 py-2.5 rounded-lg text-sm text-center"
-              >
-                Get Started
-              </button>
-
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-    </nav>
-  );
+);
 };
 
 export default Navbar;
